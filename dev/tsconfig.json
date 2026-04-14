@@ -1,0 +1,24 @@
+{
+  "extends": "../tsconfig.json",
+  "exclude": [],
+  "include": [
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs",
+    "**/*.ts",
+    "**/*.tsx",
+    "../src/**/*.ts",
+    "../src/**/*.tsx",
+    "next.config.mjs",
+    ".next/types/**/*.ts"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@payload-config": ["./payload.config.ts"],
+      "payload-plugin-ecommerce-digitaldownload": ["../src/index.ts"]
+    },
+    "noEmit": true,
+    "emitDeclarationOnly": false
+  }
+}
