@@ -28,6 +28,26 @@ export default buildConfig({
     },
   }),
   plugins: [
+    ecommerceDigitalDownloadPlugin({
+      enabled: true,
+      access: {
+        isAdmin: () => {
+          return true;
+        },
+        isCustomer: () => {
+          return true;
+        },
+        isDocumentOwner: () => {
+          return true;
+        },
+      },
+      folderName: "DigitalDownloadAssets",
+      slugs: {
+        products: "products",
+        orders: "orders",
+        customer: "users",
+      },
+    }),
     ecommercePlugin({
       access: {
         isAdmin: () => {
@@ -54,26 +74,6 @@ export default buildConfig({
       inventory: true,
       payments: {
         paymentMethods: [],
-      },
-    }),
-    ecommerceDigitalDownloadPlugin({
-      enabled: true,
-      access: {
-        isAdmin: () => {
-          return true;
-        },
-        isCustomer: () => {
-          return true;
-        },
-        isDocumentOwner: () => {
-          return true;
-        },
-      },
-      folderName: "DigitalDownloadAssets",
-      slugs: {
-        products: "products",
-        orders: "orders",
-        customer: "users",
       },
     }),
   ],

@@ -36,11 +36,11 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
-    "@payloadcms/db-sqlite": "3.82.1",
-    "@payloadcms/eslint-config": "3.28.0",
-    "@payloadcms/next": "3.82.1",
-    "@payloadcms/richtext-lexical": "3.82.1",
-    "@payloadcms/ui": "3.82.1",
+    "@payloadcms/db-sqlite": "^3.83.0",
+    "@payloadcms/eslint-config": "^3.28.0",
+    "@payloadcms/next": "^3.83.0",
+    "@payloadcms/richtext-lexical": "^3.83.0",
+    "@payloadcms/ui": "^3.83.0",
     "@playwright/test": "1.59.1",
     "@swc-node/register": "1.11.1",
     "@swc/cli": "0.8.1",
@@ -50,12 +50,12 @@
     "copyfiles": "2.4.1",
     "cross-env": "^10.1.0",
     "eslint": "^10.2.0",
-    "eslint-config-next": "16.2.3",
+    "eslint-config-next": "^16.2.4",
     "graphql": "^16.8.1",
-    "next": "16.2.3",
+    "next": "^16.2.4",
     "open": "^11.0.0",
-    "payload": "3.82.1",
-    "prettier": "^3.4.2",
+    "payload": "^3.83.0",
+    "prettier": "^3.8.3",
     "qs-esm": "8.0.1",
     "react": "19.2.5",
     "react-dom": "19.2.5",
@@ -66,8 +66,8 @@
     "vitest": "4.1.4"
   },
   "peerDependencies": {
-    "payload": "^3.82.1",
-    "@payloadcms/plugin-ecommerce": "^3.82.1"
+    "@payloadcms/plugin-ecommerce": "^3.82.1",
+    "payload": "^3.82.1"
   },
   "engines": {
     "node": "^18.20.2 || >=20.9.0",

@@ -1,11 +1,15 @@
 import type { Access, CollectionSlug, Config, Field, FieldAccess } from "payload";
+import { definePlugin } from "payload";
 
 import { createAssetsCollection, createProductAssetsCollection } from "./collections.js";
 
-export interface PluginTypes {
-  /**
-   * Enable or disable plugin
-   */
+declare module "payload" {
+  interface RegisteredPlugins {
+    "plugin-ecommerce-digital-download": EcommerceDigitalDownloadPluginOptions;
+  }
+}
+
+export type EcommerceDigitalDownloadPluginOptions = {
   enabled: boolean;
   access: {
     isAdmin: Access;
@@ -18,40 +22,38 @@ export interface PluginTypes {
     orders: CollectionSlug;
     customer: CollectionSlug;
   };
-}
+  // collections: string[];
+  // generateTitle?: (doc: Record<string, unknown>) => string;
+};
 
 export type FulfillmentType = "automatic" | "manual";
 
-export const ecommerceDigitalDownloadPlugin =
-  (pluginConfig: PluginTypes) =>
-  (incomingConfig: Config): Config => {
-    if (pluginConfig.enabled === false) {
-      return incomingConfig;
+export const ecommerceDigitalDownloadPlugin = definePlugin<EcommerceDigitalDownloadPluginOptions>({
+  slug: "plugin-ecommerce-digital-download",
+  order: 10,
+  plugin({ config, plugins, enabled, slugs, folderName, access: accessConfig }) {
+    const ecommerceDigitalDownload = plugins["plugin-ecommerce-digital-download"];
+    const ecommerce = plugins["plugin-ecommerce"]; // waiting for plugin-ecommerce to be registered
+
+    if (!enabled) {
+      return config;
     }
 
-    if (!incomingConfig.collections) {
-      incomingConfig.collections = [];
-    }
-
-    const accessConfig = pluginConfig.access;
-
-    const productCollection = incomingConfig.collections?.find(
-      (c) => c.slug === pluginConfig.slugs.products,
-    );
+    const productCollection = config.collections?.find((c) => c.slug === slugs.products);
 
     if (!productCollection) {
       throw new Error("Products collection not found in config.collections");
     }
 
     return {
-      ...incomingConfig,
+      ...config,
       async onInit(payload) {
-        if (incomingConfig.onInit) await incomingConfig.onInit(payload);
+        if (config.onInit) await config.onInit(payload);
 
         const hasFolder = await payload.db.findOne({
           collection: "payload-folders",
           where: {
-            name: { equals: pluginConfig.folderName },
+            name: { equals: folderName },
           },
         });
 
@@ -59,15 +61,15 @@ export const ecommerceDigitalDownloadPlugin =
           await payload.create({
             collection: "payload-folders",
             data: {
-              name: pluginConfig.folderName,
+              name: folderName,
               folderType: ["digital-download-assets"],
             },
           });
         }
       },
       collections: [
-        ...(incomingConfig.collections?.map((collection) => {
-          if (collection.slug === pluginConfig.slugs.products) {
+        ...(config.collections?.map((collection) => {
+          if (collection.slug === slugs.products) {
             const tabsField = collection.fields?.find((f) => f.type === "tabs");
 
             const digitalDownloadFields: Field[] = [
@@ -97,4 +99,5 @@ export const ecommerceDigitalDownloadPlugin =
         createProductAssetsCollection({ access: accessConfig }),
       ],
     };
-  };
+  },
+});
