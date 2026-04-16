@@ -22,8 +22,6 @@ export type EcommerceDigitalDownloadPluginOptions = {
     orders: CollectionSlug;
     customer: CollectionSlug;
   };
-  // collections: string[];
-  // generateTitle?: (doc: Record<string, unknown>) => string;
 };
 
 export type FulfillmentType = "automatic" | "manual";
@@ -35,9 +33,16 @@ export const ecommerceDigitalDownloadPlugin = definePlugin<EcommerceDigitalDownl
     const ecommerceDigitalDownload = plugins["plugin-ecommerce-digital-download"];
     const ecommerce = plugins["plugin-ecommerce"]; // waiting for plugin-ecommerce to be registered
 
+    // todo: access control should be inherited from ecommerce plugin
+    // todo: slugs should be inherited from ecommerce plugin
+
     if (!enabled) {
       return config;
     }
+
+    // if (!ecommerce) {
+    //   throw new Error("Ecommerce plugin must be registered before ecommerceDigitalDownloadPlugin");
+    // }
 
     const productCollection = config.collections?.find((c) => c.slug === slugs.products);
 

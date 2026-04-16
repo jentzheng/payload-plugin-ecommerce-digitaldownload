@@ -1,11 +1,11 @@
 import { type CollectionConfig } from "payload";
 import { isPurchased } from "@plugin/access/index.js";
-import { PluginTypes } from "index.js";
+import type { EcommerceDigitalDownloadPluginOptions } from "./index.js";
 
 export const createAssetsCollection = ({
   access,
 }: {
-  access: PluginTypes["access"];
+  access: EcommerceDigitalDownloadPluginOptions["access"];
 }): CollectionConfig => {
   return {
     slug: "digital-download-assets",
@@ -66,7 +66,7 @@ export const createAssetsCollection = ({
 export const createProductAssetsCollection = ({
   access,
 }: {
-  access: PluginTypes["access"];
+  access: EcommerceDigitalDownloadPluginOptions["access"];
 }): CollectionConfig => ({
   slug: "digital-download-product-assets",
   labels: { singular: "Product Asset", plural: "Product Assets" },
