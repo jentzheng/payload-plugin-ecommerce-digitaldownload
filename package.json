@@ -1,6 +1,6 @@
 {
-  "name": "payload-plugin-ecommerce-digitaldownload",
-  "version": "1.0.0",
+  "name": "@cyberdelab/payload-plugin-ecommerce-digitaldownload",
+  "version": "0.0.1",
   "description": "PayloadCMS ecommerce digitaldownload",
   "license": "MIT",
   "type": "module",
@@ -66,8 +66,8 @@
     "vitest": "4.1.4"
   },
   "peerDependencies": {
-    "@payloadcms/plugin-ecommerce": "^3.82.1",
-    "payload": "^3.82.1"
+    "payload": "^3.83.0",
+    "@payloadcms/plugin-ecommerce": "^3.83.0"
   },
   "engines": {
     "node": "^18.20.2 || >=20.9.0",

@@ -41,11 +41,13 @@ export default buildConfig({
           return true;
         },
       },
-      folderName: "DigitalDownloadAssets",
       slugs: {
         products: "products",
         orders: "orders",
         customer: "users",
+      },
+      handleFulfillment: (doc) => {
+        // handle fulfillment logic here, e.g. send email with download link, etc.
       },
     }),
     ecommercePlugin({

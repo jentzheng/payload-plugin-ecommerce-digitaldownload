@@ -4,13 +4,16 @@ import type { EcommerceDigitalDownloadPluginOptions } from "./index.js";
 
 export const createAssetsCollection = ({
   access,
+  override,
 }: {
   access: EcommerceDigitalDownloadPluginOptions["access"];
+  override?: EcommerceDigitalDownloadPluginOptions["assetsCollectionOverride"];
 }): CollectionConfig => {
   return {
     slug: "digital-download-assets",
     labels: { singular: "Digital Asset", plural: "Digital Assets" },
     enableQueryPresets: true,
+
     access: {
       create: access.isAdmin,
       delete: access.isAdmin,
@@ -60,6 +63,7 @@ export const createAssetsCollection = ({
         },
       ],
     },
+    ...override,
   };
 };
 

@@ -41,7 +41,6 @@ next-env.d.ts
 
 .env
 
-/dev/media
 
 # Playwright
 /test-results/
@@ -51,3 +50,4 @@ next-env.d.ts
 
 .agents
 *.db
+/dev/media

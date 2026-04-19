@@ -4,7 +4,9 @@ import type {
   OrderWithDigitalDownloads,
 } from "./types.js";
 
-export function getDigitalDownloadFromOrder(order: OrderWithDigitalDownloads) {
+export function getDigitalDownloadFromOrder<TOrder extends OrderWithDigitalDownloads>(
+  order: TOrder,
+) {
   return order.items?.reduce<
     {
       title: string;

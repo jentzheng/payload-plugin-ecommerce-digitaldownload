@@ -1,6 +1,14 @@
-import type { Access, CollectionSlug, Config, Field, FieldAccess } from "payload";
-import { definePlugin } from "payload";
+import type {
+  Access,
+  CollectionConfig,
+  CollectionSlug,
+  CollectionAfterChangeHook,
+  Config,
+  Field,
+  FieldAccess,
+} from "payload";
 
+import { definePlugin } from "payload";
 import { createAssetsCollection, createProductAssetsCollection } from "./collections.js";
 
 declare module "payload" {
@@ -11,17 +19,21 @@ declare module "payload" {
 
 export type EcommerceDigitalDownloadPluginOptions = {
   enabled: boolean;
+  // todo: these options should be inherited from ecommerce plugin
   access: {
     isAdmin: Access;
     isCustomer?: FieldAccess;
     isDocumentOwner: Access;
   };
-  folderName: string;
+  // todo: these slugs should be inherited from ecommerce plugin
   slugs: {
     products: CollectionSlug;
     orders: CollectionSlug;
     customer: CollectionSlug;
   };
+  assetsCollectionOverride?: Partial<CollectionConfig>;
+  productsAssetsCollectionOverride?: Partial<CollectionConfig>;
+  handleFulfillment?: (doc: any) => void;
 };
 
 export type FulfillmentType = "automatic" | "manual";
@@ -29,7 +41,16 @@ export type FulfillmentType = "automatic" | "manual";
 export const ecommerceDigitalDownloadPlugin = definePlugin<EcommerceDigitalDownloadPluginOptions>({
   slug: "plugin-ecommerce-digital-download",
   order: 10,
-  plugin({ config, plugins, enabled, slugs, folderName, access: accessConfig }) {
+  plugin({
+    config,
+    plugins,
+    enabled,
+    slugs,
+    access: accessConfig,
+    assetsCollectionOverride,
+    productsAssetsCollectionOverride,
+    handleFulfillment,
+  }) {
     const ecommerceDigitalDownload = plugins["plugin-ecommerce-digital-download"];
     const ecommerce = plugins["plugin-ecommerce"]; // waiting for plugin-ecommerce to be registered
 
@@ -45,20 +66,23 @@ export const ecommerceDigitalDownloadPlugin = definePlugin<EcommerceDigitalDownl
     // }
 
     const productCollection = config.collections?.find((c) => c.slug === slugs.products);
+    const transactionCollection = config.collections?.find((c) => c.slug === "transactions");
 
-    if (!productCollection) {
+    if (!productCollection || !transactionCollection) {
       throw new Error("Products collection not found in config.collections");
     }
 
     return {
       ...config,
       async onInit(payload) {
-        if (config.onInit) await config.onInit(payload);
+        if (config.onInit) {
+          await config.onInit(payload);
+        }
 
         const hasFolder = await payload.db.findOne({
           collection: "payload-folders",
           where: {
-            name: { equals: folderName },
+            name: { equals: "DigitalDownloadAssets" },
           },
         });
 
@@ -66,7 +90,7 @@ export const ecommerceDigitalDownloadPlugin = definePlugin<EcommerceDigitalDownl
           await payload.create({
             collection: "payload-folders",
             data: {
-              name: folderName,
+              name: "DigitalDownloadAssets",
               folderType: ["digital-download-assets"],
             },
           });
@@ -98,9 +122,27 @@ export const ecommerceDigitalDownloadPlugin = definePlugin<EcommerceDigitalDownl
 
             return collection;
           }
+
+          if (collection.slug === "transactions") {
+            const fullFillmentHook: CollectionAfterChangeHook = async (args) => {
+              const { doc, req, operation } = args;
+              if (operation === "update" && doc.status === "succeeded") {
+                handleFulfillment && handleFulfillment(doc);
+              }
+            };
+
+            return {
+              ...collection,
+              hooks: {
+                ...collection.hooks,
+                afterChange: [...(collection.hooks?.afterChange || []), fullFillmentHook],
+              },
+            };
+          }
+
           return collection;
         }) || []),
-        createAssetsCollection({ access: accessConfig }),
+        createAssetsCollection({ access: accessConfig, override: assetsCollectionOverride }),
         createProductAssetsCollection({ access: accessConfig }),
       ],
     };
