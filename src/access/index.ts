@@ -1,4 +1,4 @@
-import type { Access } from "payload";
+import type { Access, TypedCollection } from "payload";
 import type { OrderWithDigitalDownloads } from "../types.js";
 
 export const isPurchased: Access = async ({ req }) => {
@@ -38,11 +38,12 @@ export const isPurchased: Access = async ({ req }) => {
     order.items?.some((item) => {
       const product =
         (typeof item === "object" && typeof item.product === "object" && item.product) || null;
+
       const productAssets = product?.digitalDownloadAssets?.docs;
-      return productAssets?.some((productAsset) => {
+      return productAssets?.some((productAsset: TypedCollection["productAssets"]) => {
         return (
           typeof productAsset === "object" &&
-          productAsset.assets.some((asset) => {
+          productAsset.assets.some((asset: TypedCollection["digitalDownloadAssets"]) => {
             return typeof asset === "object" && asset.id.toString() === assetId;
           })
         );

@@ -1,8 +1,5 @@
-import type {
-  DigitalDownloadAssetMin,
-  DigitalDownloadProductAssetMin,
-  OrderWithDigitalDownloads,
-} from "./types.js";
+import { TypedCollection } from "payload";
+import type { OrderWithDigitalDownloads } from "./types.js";
 
 export function getDigitalDownloadFromOrder<TOrder extends OrderWithDigitalDownloads>(
   order: TOrder,
@@ -26,10 +23,10 @@ export function getDigitalDownloadFromOrder<TOrder extends OrderWithDigitalDownl
     const title = variant?.title || product.title;
 
     const productAssets = product.digitalDownloadAssets?.docs?.filter(
-      (doc) => typeof doc === "object" && doc !== null,
+      (doc: TypedCollection["productAssets"]) => typeof doc === "object" && doc !== null,
     );
 
-    productAssets?.forEach((productAsset) => {
+    productAssets?.forEach((productAsset: TypedCollection["productAssets"]) => {
       const assetVariant =
         typeof productAsset.variant === "object" && productAsset.variant !== null
           ? productAsset.variant
@@ -48,7 +45,7 @@ export function getDigitalDownloadFromOrder<TOrder extends OrderWithDigitalDownl
         return;
       }
 
-      productAsset.assets.forEach((asset) => {
+      productAsset.assets.forEach((asset: TypedCollection["digitalDownloadAssets"]) => {
         if (typeof asset !== "object" || asset === null || !asset.url) {
           return;
         }

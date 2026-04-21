@@ -1,17 +1,22 @@
 {
   "name": "@cyberdelab/payload-plugin-ecommerce-digitaldownload",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "PayloadCMS ecommerce digitaldownload",
   "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
-      "import": "./src/index.ts",
+      "import": "./dist/index.js",
       "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "default": "./dist/index.js"
+    },
+    "./utils": {
+      "import": "./dist/utils.js",
+      "types": "./src/utils.ts",
+      "default": "./dist/utils.js"
     }
   },
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
   "types": "./src/index.ts",
   "files": [
     "dist"
@@ -49,7 +54,7 @@
     "@types/react-dom": "19.2.3",
     "copyfiles": "2.4.1",
     "cross-env": "^10.1.0",
-    "eslint": "^10.2.0",
+    "eslint": "^10.2.1",
     "eslint-config-next": "^16.2.4",
     "graphql": "^16.8.1",
     "next": "^16.2.4",
@@ -66,19 +71,26 @@
     "vitest": "4.1.4"
   },
   "peerDependencies": {
-    "payload": "^3.83.0",
-    "@payloadcms/plugin-ecommerce": "^3.83.0"
+    "@payloadcms/plugin-ecommerce": "^3.83.0",
+    "payload": "^3.83.0"
   },
   "engines": {
     "node": "^18.20.2 || >=20.9.0",
     "pnpm": "^9 || ^10"
   },
   "publishConfig": {
+    "directory": "dist",
+    "linkDirectory": true,
     "exports": {
       ".": {
         "import": "./dist/index.js",
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
+      },
+      "./utils": {
+        "import": "./dist/utils.js",
+        "types": "./dist/utils.ts",
+        "default": "./dist/utils.js"
       }
     },
     "main": "./dist/index.js",

@@ -1,5 +1,5 @@
 import { type CollectionConfig } from "payload";
-import { isPurchased } from "@plugin/access/index.js";
+import { isPurchased } from "./access/index.js";
 import type { EcommerceDigitalDownloadPluginOptions } from "./index.js";
 
 export const createAssetsCollection = ({
@@ -69,8 +69,10 @@ export const createAssetsCollection = ({
 
 export const createProductAssetsCollection = ({
   access,
+  override,
 }: {
   access: EcommerceDigitalDownloadPluginOptions["access"];
+  override?: EcommerceDigitalDownloadPluginOptions["productsAssetsCollectionOverride"];
 }): CollectionConfig => ({
   slug: "digital-download-product-assets",
   labels: { singular: "Product Asset", plural: "Product Assets" },
@@ -135,4 +137,5 @@ export const createProductAssetsCollection = ({
       },
     },
   ],
+  ...override,
 });

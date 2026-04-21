@@ -5,38 +5,14 @@
 // interfaces via TypeScript's structural subtyping.
 // ---------------------------------------------------------------------------
 
-export interface DigitalDownloadAssetMin {
-  id: number | string;
-  url?: string | null;
-  filename?: string | null;
-  filesize?: number | null;
-}
-
-export interface DigitalDownloadProductAssetMin {
-  variant?: number | null | { id: number | string };
-  product?: number | null | { id: number | string };
-  assets: (number | DigitalDownloadAssetMin)[];
-}
-
-export interface ProductWithDigitalDownloads {
-  id: number | string;
-  title: string;
-  digitalDownloadAssets?: {
-    docs?: (number | DigitalDownloadProductAssetMin)[] | null;
-  } | null;
-}
-
-export interface VariantMin {
-  id: number | string;
-  title: string;
-}
+import { TypedCollection } from "payload";
 
 export interface OrderWithDigitalDownloads {
   transactions?: (number | { status: string })[] | null;
   items?:
     | {
-        product?: number | null | ProductWithDigitalDownloads;
-        variant?: number | null | VariantMin;
+        product?: number | null | TypedCollection["products"];
+        variant?: number | null | TypedCollection["variants"];
         id?: string | null;
       }[]
     | null;
